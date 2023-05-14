@@ -32,13 +32,13 @@ struct Add
 template<typename I>
 struct Add<I,Zero>
 {
-  enum { value = I::value };
+  I typedef result;
 };
 
 template<typename I, typename J>
 struct Add<I,Succ<J>>
 {
-  enum { value = Add<Succ<I>,J>::value };
+  typename Add<Succ<I>,J>::result typedef result;
 };
 
 template<typename I, typename J>
@@ -98,11 +98,11 @@ int main() {
 
   assert((Mult<Succ<Succ<Succ<Zero>>>,Succ<Succ<Succ<Zero>>>>::value == 9));
 
-  assert((Add<Zero,Succ<Zero>>::value == 1));
+  assert((Add<Zero,Succ<Zero>>::result::value == 1));
 
-  assert((Add<Zero,Succ<Succ<Zero>>>::value == 2));
+  assert((Add<Zero,Succ<Succ<Zero>>>::result::value == 2));
 
-  assert((Add<Succ<Zero>,Succ<Succ<Zero>>>::value == 3));
+  assert((Add<Succ<Zero>,Succ<Succ<Zero>>>::result::value == 3));
 
   std::cout << "SUCCESS!" << std::endl;
 }
