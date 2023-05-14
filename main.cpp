@@ -84,6 +84,9 @@ struct EMult { };
 template<int Arg, typename Body>
 struct Lambda { };
 
+template<typename NameList, typename Body>
+struct LLambda { };
+
 template<typename Lambda, typename Env>
 struct Closure { };
 
@@ -200,10 +203,22 @@ struct Eval<Lambda<Name, Body>, Env>
   Closure<Lambda<Name, Body>, Env> typedef result;
 };
 
+template<typename NameList, typename Body, typename Env>
+struct Eval<LLambda<NameList, Body>, Env>
+{
+  Closure<LLambda<NameList, Body>, Env> typedef result;
+};
+
 template<int Name, typename Body, typename Env, typename Arg>
 struct Apply<Closure<Lambda<Name,Body>, Env>, Arg>
 {
   typename Eval<Body, typename Let<LetSet<Name, Arg>, Env>::result>::result typedef result;
+};
+
+template<typename NameList, typename Body, typename Env, typename ValList>
+struct Apply<Closure<LLambda<NameList,Body>, Env>, ValList>
+{
+  typename Eval<Body, typename LetList<typename NameList::result, ValList, Env>::result>::result typedef result;
 };
 
 template<int Name, typename Body, typename Arg, typename Env>
@@ -224,6 +239,13 @@ struct EvList<ValCons<Val,Vals>, Env>
 {
   ValCons<typename Eval<Val, Env>::result,
           typename EvList<Vals,Env>::result> typedef result;
+};
+
+template<typename NameList, typename Body, typename ValList, typename Env>
+struct Eval<Call<LLambda<NameList, Body>, ValList>, Env>
+{
+  typename Apply<typename Eval<LLambda<NameList, Body>, Env>::result,
+                 typename EvList<typename ValList::result, Env>::result>::result typedef result;
 };
 
 enum {
@@ -311,6 +333,8 @@ int main() {
 
   assert((Eval<Ref<X>, env4>::result::value == 3));
   assert((Eval<Ref<Y>, env4>::result::value == 6));
+
+  assert((Eval<Call<LLambda<NameList<X>, EMult<ENum<5>, Ref<X>>>, ValList<ENum<2>>>, EmptyEnv>::result::value == 10));
 
   std::cout << "SUCCESS!" << std::endl;
 }
