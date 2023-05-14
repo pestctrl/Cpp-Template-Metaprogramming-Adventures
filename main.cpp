@@ -336,5 +336,10 @@ int main() {
 
   assert((Eval<Call<LLambda<NameList<X>, EMult<ENum<5>, Ref<X>>>, ValList<ENum<2>>>, EmptyEnv>::result::value == 10));
 
+  LLambda<NameList<X>, EMult<Ref<X>, Ref<X>>>
+    typedef square;
+
+  assert((Eval<Call<square, ValList<ENum<2>>>, EmptyEnv>::result::value == 4));
+
   std::cout << "SUCCESS!" << std::endl;
 }
