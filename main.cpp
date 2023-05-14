@@ -81,6 +81,19 @@ struct Factorial<Zero>
   Succ<Zero> typedef result;
 };
 
+// Helpers
+template<int N>
+struct GenNumber
+{
+  Succ<typename GenNumber<N-1>::result> typedef result;
+};
+
+template<>
+struct GenNumber<0>
+{
+  Zero typedef result;
+};
+
 // Environment MetaValues
 struct Error
 {
@@ -148,6 +161,8 @@ int main() {
   assert((Lookup<X, Binding<X,Succ<Zero>, EmptyEnv>>::result::value == 1));
 
   assert((Lookup<X, EmptyEnv>::result::value == INT_MIN));
+
+  assert(GenNumber<3>::result::value == 3);
 
   std::cout << "SUCCESS!" << std::endl;
 }
