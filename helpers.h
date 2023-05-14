@@ -1,13 +1,13 @@
 #include "math.h"
 // Helpers
 template<int N>
-struct GenNumber
+struct Num
 {
-  Succ<typename GenNumber<N-1>::result> typedef result;
+  Succ<typename Num<N-1>::result> typedef result;
 };
 
 template<>
-struct GenNumber<0>
+struct Num<0>
 {
   Zero typedef result;
 };

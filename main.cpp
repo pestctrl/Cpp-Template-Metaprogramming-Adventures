@@ -48,15 +48,17 @@ int main() {
 
   list_asserts();
 
-  assert((Add<GenNumber<3>::result, GenNumber<2>::result>::result::value == 5));
+  functional_asserts();
 
-  assert((Mult<GenNumber<3>::result, GenNumber<2>::result>::result::value == 6));
+  assert((Add<Num<3>::result, Num<2>::result>::result::value == 5));
 
-  assert((Lookup<X, Binding<X, GenNumber<1>::result, EmptyEnv>>::result::value == 1));
+  assert((Mult<Num<3>::result, Num<2>::result>::result::value == 6));
+
+  assert((Lookup<X, Binding<X, Num<1>::result, EmptyEnv>>::result::value == 1));
 
   assert((Lookup<X, EmptyEnv>::result::value == INT_MIN));
 
-  assert(GenNumber<3>::result::value == 3);
+  assert(Num<3>::result::value == 3);
 
   std::cout << "SUCCESS!" << std::endl;
 }
