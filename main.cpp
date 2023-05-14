@@ -158,11 +158,15 @@ int main() {
 
   assert((Add<Succ<Zero>,Succ<Succ<Zero>>>::result::value == 3));
 
-  assert((Lookup<X, Binding<X,Succ<Zero>, EmptyEnv>>::result::value == 1));
+  assert((Lookup<X, Binding<X, GenNumber<1>::result, EmptyEnv>>::result::value == 1));
 
   assert((Lookup<X, EmptyEnv>::result::value == INT_MIN));
 
   assert(GenNumber<3>::result::value == 3);
+
+  assert((Add<GenNumber<3>::result, GenNumber<2>::result>::result::value == 5));
+
+  assert((Mult<GenNumber<3>::result, GenNumber<2>::result>::result::value == 6));
 
   std::cout << "SUCCESS!" << std::endl;
 }
