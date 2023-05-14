@@ -13,18 +13,6 @@ struct Succ
   enum { value = N::value + 1 };
 };
 
-template<int N>
-struct Factorial
-{
-  enum { value = N * Factorial<N-1>::value };
-};
-
-template<>
-struct Factorial<0>
-{
-  enum { value = 1 };
-};
-
 template<typename I,typename J>
 struct Add
 { };
@@ -76,6 +64,22 @@ struct Mult<Zero,T>
   Zero typedef result;
 };
 
+template<typename N>
+struct Factorial
+{ };
+
+template<typename N>
+struct Factorial<Succ<N>>
+{
+  typename Mult<Succ<N>,typename Factorial<N>::result>::result typedef result;
+};
+
+template<>
+struct Factorial<Zero>
+{
+  Succ<Zero> typedef result;
+};
+
 int main() {
   assert(true);
 
@@ -83,9 +87,9 @@ int main() {
 
   assert(Succ<Zero>::value == 1);
 
-  assert(Factorial<0>::value == 1);
+  assert(Factorial<Zero>::result::value == 1);
 
-  assert(Factorial<3>::value == 6);
+  assert(Factorial<Succ<Succ<Succ<Zero>>>>::result::value == 6);
 
   assert((Mult<Succ<Succ<Succ<Zero>>>,Zero>::result::value == 0));
 
