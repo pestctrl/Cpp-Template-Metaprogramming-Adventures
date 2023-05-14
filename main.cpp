@@ -121,7 +121,7 @@ struct Eval<ENum<Value>, Env>
 template<typename A, typename B, typename Env>
 struct Eval<EAdd<A,B>, Env>
 {
-  typename Add<typename Eval<typename A::result,Env>::result,typename Eval<typename B::result,Env>::result>::result typedef result;
+  typename Add<typename Eval<A,Env>::result,typename Eval<B,Env>::result>::result typedef result;
 };
 
 template<int Name, typename Body, typename Env>
@@ -197,7 +197,7 @@ int main() {
 
   assert((Eval<ENum<2>, EmptyEnv>::result::value == 2));
 
-  assert((Eval<EAdd<Num<2>, Num<3>>, EmptyEnv>::result::value == 5));
+  assert((Eval<EAdd<ENum<2>, ENum<3>>, EmptyEnv>::result::value == 5));
 
   assert((Eval<Call<Lambda<X, Ref<X>>, Num<2>::result>, EmptyEnv>::result::value == 2));
 
