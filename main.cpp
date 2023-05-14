@@ -48,31 +48,32 @@ struct Mult
 template<typename I, typename K>
 struct Mult<I, Succ<K>>
 {
-  enum { value = Add<I,Mult<I,K>>::value };
+  // not typename Add<I,Mult<I,K>::result>::result typedef result;
+  typename Add<I,typename Mult<I,K>::result>::result typedef result;
 };
 
 template<>
 struct Mult<Succ<Zero>,Zero>
 {
-  enum { value = 0 };
+  Zero typedef result;
 };
 
 template<>
 struct Mult<Zero,Succ<Zero>>
 {
-  enum { value = 0 };
+  Zero typedef result;
 };
 
 template<typename T>
 struct Mult<T,Zero>
 {
-  enum { value = 0 };
+  Zero typedef result;
 };
 
 template<typename T>
 struct Mult<Zero,T>
 {
-  enum { value = 0 };
+  Zero typedef result;
 };
 
 int main() {
@@ -86,17 +87,17 @@ int main() {
 
   assert(Factorial<3>::value == 6);
 
-  assert((Mult<Succ<Succ<Succ<Zero>>>,Zero>::value == 0));
+  assert((Mult<Succ<Succ<Succ<Zero>>>,Zero>::result::value == 0));
 
-  assert((Mult<Zero,Succ<Zero>>::value == 0));
+  assert((Mult<Zero,Succ<Zero>>::result::value == 0));
 
-  assert((Mult<Succ<Zero>,Zero>::value == 0));
+  assert((Mult<Succ<Zero>,Zero>::result::value == 0));
 
-  assert((Mult<Succ<Succ<Succ<Zero>>>,Succ<Zero>>::value == 3));
+  assert((Mult<Succ<Succ<Succ<Zero>>>,Succ<Zero>>::result::value == 3));
 
-  assert((Mult<Succ<Zero>,Succ<Succ<Succ<Zero>>>>::value == 3));
+  assert((Mult<Succ<Zero>,Succ<Succ<Succ<Zero>>>>::result::value == 3));
 
-  assert((Mult<Succ<Succ<Succ<Zero>>>,Succ<Succ<Succ<Zero>>>>::value == 9));
+  assert((Mult<Succ<Succ<Succ<Zero>>>,Succ<Succ<Succ<Zero>>>>::result::value == 9));
 
   assert((Add<Zero,Succ<Zero>>::result::value == 1));
 
