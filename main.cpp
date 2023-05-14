@@ -124,7 +124,12 @@ struct Eval<Call<Lambda<Name, Body>, Arg>, Env>
                  typename Eval<Arg, Env>::result>::result typedef result;
 };
 
-enum { X, Y, Z };
+enum {
+    A, B, C, D, E, F, G,
+    H, I, J, K, L, M, N, O, P,
+    Q, R, S, T, U, V,
+    W, X, Y, Z
+};
 
 int main() {
   assert(true);
@@ -165,9 +170,9 @@ int main() {
   assert((Eval<Ref<Y>, env2>::result::value == 12));
   assert((Eval<Ref<Z>, env2>::result::value == 3));
 
-  assert((Eval<Atom<X>, env2>::result::value == 0));
-  assert((Eval<Atom<Y>, env2>::result::value == 1));
-  assert((Eval<Atom<Z>, env2>::result::value == 2));
+  assert((Eval<Atom<X>, env2>::result::value == 23));
+  assert((Eval<Atom<Y>, env2>::result::value == 24));
+  assert((Eval<Atom<Z>, env2>::result::value == 25));
 
   assert((Eval<Num<2>::result, EmptyEnv>::result::value == 2));
 
