@@ -64,12 +64,22 @@ struct Let<LetSet<Name, Val>, Ts...>
   Binding<Name,Val,typename Let<Ts...>::result> typedef result;
 };
 
+// Evaluator MetaValues
+template<int name>
+struct Ref { };
+
+// Evaluator MetaFunctions
 template<typename Expr, typename Env>
 struct Eval { };
 
+template<int name, typename Env>
+struct Eval<Ref<name>, Env>
+{
+  typename Lookup<name, Env>::result typedef result;
+};
+
 template<typename Closure, typename Arg>
 struct Apply { };
-
 
 enum { X, Y, Z };
 
@@ -107,6 +117,10 @@ int main() {
   assert((Lookup<X, env2>::result::value == 11));
   assert((Lookup<Y, env2>::result::value == 12));
   assert((Lookup<Z, env2>::result::value == 3));
+
+  assert((Eval<Ref<X>, env2>::result::value == 11));
+  assert((Eval<Ref<Y>, env2>::result::value == 12));
+  assert((Eval<Ref<Z>, env2>::result::value == 3));
 
   std::cout << "SUCCESS!" << std::endl;
 }
