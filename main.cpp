@@ -309,5 +309,8 @@ int main() {
                  EmptyEnv>::result,
           EmptyEnv>::result typedef env4;
 
+  assert((Eval<Ref<X>, env4>::result::value == 3));
+  assert((Eval<Ref<Y>, env4>::result::value == 6));
+
   std::cout << "SUCCESS!" << std::endl;
 }
