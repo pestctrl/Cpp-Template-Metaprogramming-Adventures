@@ -65,6 +65,9 @@ struct Let<LetSet<Name, Val>, Ts...>
 };
 
 // Evaluator MetaValues
+template<int name>
+struct Ref { };
+
 template<int Arg, typename Body>
 struct Lambda { };
 
@@ -82,7 +85,7 @@ template<typename Closure, typename Arg>
 struct Apply { };
 
 template<int Name, typename Env>
-struct Eval<Name, Env>
+struct Eval<Ref<Name>, Env>
 {
   typename Lookup<Name, Env>::result typedef result;
 };
@@ -149,13 +152,13 @@ int main() {
   assert((Lookup<Y, env2>::result::value == 12));
   assert((Lookup<Z, env2>::result::value == 3));
 
-  assert((Eval<X, env2>::result::value == 11));
-  assert((Eval<Y, env2>::result::value == 12));
-  assert((Eval<Z, env2>::result::value == 3));
+  assert((Eval<Ref<X>, env2>::result::value == 11));
+  assert((Eval<Ref<Y>, env2>::result::value == 12));
+  assert((Eval<Ref<Z>, env2>::result::value == 3));
 
   assert((Eval<Num<2>::result, EmptyEnv>::result::value == 2));
 
-  assert((Eval<Call<Lambda<X, X>, Num<2>::result>, EmptyEnv>::result::value == 2));
+  assert((Eval<Call<Lambda<X, Ref<X>>, Num<2>::result>, EmptyEnv>::result::value == 2));
 
   std::cout << "SUCCESS!" << std::endl;
 }
