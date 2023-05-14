@@ -306,11 +306,11 @@ int main() {
 
   assert((Eval<Call<Lambda<X, Ref<X>>, ENum<2>>, EmptyEnv>::result::value == 2));
 
-  assert((Eval<Call<Lambda<X, EAdd<ENum<1>, Ref<X>>>, Num<2>::result>, EmptyEnv>::result::value == 3));
+  assert((Eval<Call<Lambda<X, EAdd<ENum<1>, Ref<X>>>, ENum<2>>, EmptyEnv>::result::value == 3));
 
-  assert((Eval<Call<Lambda<X, EAdd<ENum<5>, Ref<X>>>, Num<2>::result>, EmptyEnv>::result::value == 7));
+  assert((Eval<Call<Lambda<X, EAdd<ENum<5>, Ref<X>>>, ENum<2>>, EmptyEnv>::result::value == 7));
 
-  assert((Eval<Call<Lambda<X, EMult<ENum<5>, Ref<X>>>, Num<2>::result>, EmptyEnv>::result::value == 10));
+  assert((Eval<Call<Lambda<X, EMult<ENum<5>, Ref<X>>>, ENum<2>>, EmptyEnv>::result::value == 10));
 
   assert((Eval<Call<Lambda<X, EMult<ENum<5>, Ref<X>>>, EMult<ENum<4>, ENum<3>>>, EmptyEnv>::result::value == 60));
 
