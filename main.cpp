@@ -52,6 +52,12 @@ struct Let<LetSet<Name, Val>>
   Binding<Name,Val,EmptyEnv> typedef result;
 };
 
+template<int Name, typename Val, typename Env>
+struct Let<Binding<Name, Val, Env>>
+{
+  Binding<Name,Val,Env> typedef result;
+};
+
 template<int Name, typename Val, typename... Ts>
 struct Let<LetSet<Name, Val>, Ts...>
 {
@@ -86,6 +92,14 @@ int main() {
   assert((Lookup<X, env1>::result::value == 1));
   assert((Lookup<Y, env1>::result::value == 2));
   assert((Lookup<Z, env1>::result::value == 3));
+
+  Let<LetSet<X,Num<11>::result>,
+      LetSet<Y,Num<12>::result>,
+      env1>::result typedef env2;
+
+  assert((Lookup<X, env2>::result::value == 11));
+  assert((Lookup<Y, env2>::result::value == 12));
+  assert((Lookup<Z, env2>::result::value == 3));
 
   std::cout << "SUCCESS!" << std::endl;
 }
