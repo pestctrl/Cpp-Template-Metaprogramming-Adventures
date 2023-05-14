@@ -18,6 +18,9 @@ struct EmptyEnv {};
 template<int Name, typename Value, typename Env>
 struct Binding {};
 
+template<int Name, typename Value>
+struct LetSet { };
+
 // Environment MetaFunctions
 template<int Name, typename Env>
 struct Lookup {};
@@ -44,9 +47,15 @@ template<typename...>
 struct Let { };
 
 template<int Name, typename Val>
-struct Let<Cons<Name, Val>>
+struct Let<LetSet<Name, Val>>
 {
-  Binding<Name,Val,EmptyEnv> typedef value;
+  Binding<Name,Val,EmptyEnv> typedef result;
+};
+
+template<int Name, typename Val, typename... Ts>
+struct Let<LetSet<Name, Val>, Ts...>
+{
+  Binding<Name,Val,typename Let<Ts...>::result> typedef result;
 };
 
 enum { X, Y, Z };
@@ -70,8 +79,13 @@ int main() {
 
   assert(Num<3>::result::value == 3);
 
-  assert((Lookup<Y, Binding<X, Num<1>::result,
-                            Binding<Y, Num<2>::result, EmptyEnv>>>::result::value == 2));
+  Let<LetSet<X,Num<1>::result>,
+      LetSet<Y,Num<2>::result>,
+      LetSet<Z,Num<3>::result>>::result typedef env1;
+
+  assert((Lookup<X, env1>::result::value == 1));
+  assert((Lookup<Y, env1>::result::value == 2));
+  assert((Lookup<Z, env1>::result::value == 3));
 
   std::cout << "SUCCESS!" << std::endl;
 }
