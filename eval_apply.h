@@ -9,8 +9,7 @@ template<int name>
 struct Atom { };
 
 template<int A>
-struct ENum
-{ };
+struct ENum { };
 
 template<typename A, typename B>
 struct EAdd { };

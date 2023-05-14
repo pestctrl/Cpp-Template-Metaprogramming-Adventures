@@ -4,12 +4,10 @@
 #define LET_LIST_H
 
 template<int Name, typename Rest>
-struct NameCons
-{ };
+struct NameCons { };
 
 template<int... Names>
-struct NameList
-{ };
+struct NameList { };
 
 template<int Name>
 struct NameList<Name>
@@ -24,12 +22,10 @@ struct NameList<Name, Names...>
 };
 
 template<typename Val, typename Rest>
-struct ValCons
-{ };
+struct ValCons { };
 
 template<typename... Vals>
-struct ValList
-{ };
+struct ValList { };
 
 template<typename Val>
 struct ValList<Val>

@@ -13,8 +13,7 @@ struct Succ
 };
 
 template<typename I,typename J>
-struct Add
-{ };
+struct Add { };
 
 template<typename I>
 struct Add<I,Zero>
@@ -29,8 +28,7 @@ struct Add<I,Succ<J>>
 };
 
 template<typename I, typename J>
-struct Mult
-{ };
+struct Mult { };
 
 template<typename I, typename K>
 struct Mult<I, Succ<K>>
@@ -64,8 +62,7 @@ struct Mult<Zero,T>
 };
 
 template<typename N>
-struct Factorial
-{ };
+struct Factorial { };
 
 template<typename N>
 struct Factorial<Succ<N>>
