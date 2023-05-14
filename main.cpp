@@ -152,6 +152,9 @@ struct LetList<NameCons<Name, Names>, ValCons<Val, Vals>, Env>
 template<typename Expr, typename Env>
 struct Eval { };
 
+template<typename ExprList, typename Env>
+struct EvList { };
+
 template<typename Closure, typename Arg>
 struct Apply { };
 
@@ -208,6 +211,19 @@ struct Eval<Call<Lambda<Name, Body>, Arg>, Env>
 {
   typename Apply<typename Eval<Lambda<Name, Body>, Env>::result,
                  typename Eval<Arg, Env>::result>::result typedef result;
+};
+
+template<typename Val, typename Env>
+struct EvList<ValCons<Val,Nil>, Env>
+{
+  ValCons<typename Eval<Val, Env>::result, Nil> typedef result;
+};
+
+template<typename Val, typename Vals, typename Env>
+struct EvList<ValCons<Val,Vals>, Env>
+{
+  ValCons<typename Eval<Val, Env>::result,
+          typename EvList<Vals,Env>::result> typedef result;
 };
 
 enum {
@@ -284,6 +300,12 @@ int main() {
   assert((Eval<Ref<X>, env3>::result::value == 1));
   assert((Eval<Ref<Y>, env3>::result::value == 2));
   assert((Eval<Ref<Z>, env3>::result::value == 3));
+
+  LetList<NameList<X,Y>::result,
+          EvList<ValList<EAdd<ENum<1>, ENum<2>>,
+                         EMult<ENum<2>, ENum<3>>>::result,
+                 EmptyEnv>::result,
+          EmptyEnv>::result typedef env4;
 
   std::cout << "SUCCESS!" << std::endl;
 }
