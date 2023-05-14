@@ -64,6 +64,13 @@ struct Let<LetSet<Name, Val>, Ts...>
   Binding<Name,Val,typename Let<Ts...>::result> typedef result;
 };
 
+template<typename Expr, typename Env>
+struct Eval { };
+
+template<typename Closure, typename Arg>
+struct Apply { };
+
+
 enum { X, Y, Z };
 
 int main() {
