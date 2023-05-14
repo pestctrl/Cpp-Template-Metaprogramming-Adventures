@@ -28,7 +28,7 @@ struct Factorial<0>
 template<int I, int J>
 struct Mult
 {
-  enum { value = I * Mult<I,J-1>::value };
+  enum { value = I + Mult<I,J-1>::value };
 };
 
 template<int I>
