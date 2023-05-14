@@ -341,5 +341,11 @@ int main() {
 
   assert((Eval<Call<square, ValList<ENum<2>>>, EmptyEnv>::result::value == 4));
 
+  LLambda<NameList<X, Y>, EAdd<Call<square, ValList<Ref<X>>>,
+                               Call<square, ValList<Ref<Y>>>>>
+    typedef sos;
+
+  assert((Eval<Call<sos, ValList<ENum<3>,ENum<4>>>, EmptyEnv>::result::value == 25));
+
   std::cout << "SUCCESS!" << std::endl;
 }
