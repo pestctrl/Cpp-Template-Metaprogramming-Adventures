@@ -4,6 +4,8 @@
 
 void list_asserts()
 {
-  assert((Car<Cons<GenNumber<3>::result,GenNumber<2>::result>>::result::value == 3));
-  assert((Cdr<Cons<GenNumber<3>::result,GenNumber<2>::result>>::result::value == 2));
+  Cons<GenNumber<3>::result,
+       GenNumber<2>::result> typedef cons;
+  assert((Car<cons>::result::value == 3));
+  assert((Cdr<cons>::result::value == 2));
 }
