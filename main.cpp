@@ -25,6 +25,24 @@ struct Factorial<0>
   enum { value = 1 };
 };
 
+template<int I, int J>
+struct Mult
+{
+  enum { value = I * Mult<I,J-1>::value };
+};
+
+template<int I>
+struct Mult<I,0>
+{
+  enum { value = 0 };
+};
+
+template<int I>
+struct Mult<0,I>
+{
+  enum { value = 0 };
+};
+
 int main() {
   assert(true);
 
@@ -35,6 +53,10 @@ int main() {
   assert(Factorial<0>::value == 1);
 
   assert(Factorial<3>::value == 6);
+
+  assert((Mult<3,0>::value == 0));
+
+  assert((Mult<0,1>::value == 0));
 
   std::cout << "SUCCESS!" << std::endl;
 }
