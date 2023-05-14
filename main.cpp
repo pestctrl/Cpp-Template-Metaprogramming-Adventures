@@ -90,6 +90,64 @@ struct Closure { };
 template<typename Lambda, typename Arg>
 struct Call { };
 
+template<int Name, typename Rest>
+struct NameCons
+{ };
+
+template<int... Names>
+struct NameList
+{ };
+
+template<int Name>
+struct NameList<Name>
+{
+  NameCons<Name, Nil> typedef result;
+};
+
+template<int Name, int... Names>
+struct NameList<Name, Names...>
+{
+  NameCons<Name, typename NameList<Names...>::result> typedef result;
+};
+
+template<typename Val, typename Rest>
+struct ValCons
+{ };
+
+template<typename... Vals>
+struct ValList
+{ };
+
+template<typename Val>
+struct ValList<Val>
+{
+  ValCons<Val, Nil> typedef result;
+};
+
+template<typename Val, typename... Vals>
+struct ValList<Val, Vals...>
+{
+  ValCons<Val, typename ValList<Vals...>::result> typedef result;
+};
+
+template<typename Names, typename Vals, typename Env>
+struct LetList
+{
+
+};
+
+template<int Name, typename Val, typename Env>
+struct LetList<NameCons<Name, Nil>, ValCons<Val, Nil>, Env>
+{
+  Binding<Name,Val,Env> typedef result;
+};
+
+template<int Name, typename Names, typename Val, typename Vals, typename Env>
+struct LetList<NameCons<Name, Names>, ValCons<Val, Vals>, Env>
+{
+  Binding<Name,Val,typename LetList<Names, Vals, Env>::result> typedef result;
+};
+
 // Evaluator MetaFunctions
 template<typename Expr, typename Env>
 struct Eval { };
@@ -217,6 +275,15 @@ int main() {
   assert((Eval<Call<Lambda<X, EMult<ENum<5>, Ref<X>>>, Num<2>::result>, EmptyEnv>::result::value == 10));
 
   // Next step: rework lambda to have multiple arguments
+  LetList<NameList<X,Y,Z>::result,
+          ValList<Num<1>::result,
+                  Num<2>::result,
+                  Num<3>::result>::result,
+          EmptyEnv>::result typedef env3;
+
+  assert((Eval<Ref<X>, env3>::result::value == 1));
+  assert((Eval<Ref<Y>, env3>::result::value == 2));
+  assert((Eval<Ref<Z>, env3>::result::value == 3));
 
   std::cout << "SUCCESS!" << std::endl;
 }
