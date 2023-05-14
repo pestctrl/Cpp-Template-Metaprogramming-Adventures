@@ -43,6 +43,18 @@ struct Mult<0,I>
   enum { value = 0 };
 };
 
+template<>
+struct Mult<1,0>
+{
+  enum { value = 0 };
+};
+
+template<>
+struct Mult<0,1>
+{
+  enum { value = 0 };
+};
+
 template<int I>
 struct Mult<I,1>
 {
@@ -70,7 +82,13 @@ int main() {
 
   assert((Mult<0,1>::value == 0));
 
+  assert((Mult<1,0>::value == 0));
+
   assert((Mult<3,1>::value == 3));
+
+  assert((Mult<1,3>::value == 3));
+
+  assert((Mult<3,3>::value == 9));
 
   std::cout << "SUCCESS!" << std::endl;
 }
