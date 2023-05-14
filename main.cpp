@@ -60,5 +60,8 @@ int main() {
 
   assert(Num<3>::result::value == 3);
 
+  assert((Lookup<Y, Binding<X, Num<1>::result,
+                            Binding<Y, Num<2>::result, EmptyEnv>>>::result::value == 2));
+
   std::cout << "SUCCESS!" << std::endl;
 }
