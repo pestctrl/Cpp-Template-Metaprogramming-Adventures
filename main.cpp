@@ -1,85 +1,8 @@
 #include <iostream>
 #include <cassert>
 #include <climits>
+#include "math.h"
 using namespace std;
-
-struct Zero
-{
-  enum { value = 0 };
-};
-
-template<typename N>
-struct Succ
-{
-  enum { value = N::value + 1 };
-};
-
-template<typename I,typename J>
-struct Add
-{ };
-
-template<typename I>
-struct Add<I,Zero>
-{
-  I typedef result;
-};
-
-template<typename I, typename J>
-struct Add<I,Succ<J>>
-{
-  typename Add<Succ<I>,J>::result typedef result;
-};
-
-template<typename I, typename J>
-struct Mult
-{ };
-
-template<typename I, typename K>
-struct Mult<I, Succ<K>>
-{
-  // not typename Add<I,Mult<I,K>::result>::result typedef result;
-  typename Add<I,typename Mult<I,K>::result>::result typedef result;
-};
-
-template<>
-struct Mult<Succ<Zero>,Zero>
-{
-  Zero typedef result;
-};
-
-template<>
-struct Mult<Zero,Succ<Zero>>
-{
-  Zero typedef result;
-};
-
-template<typename T>
-struct Mult<T,Zero>
-{
-  Zero typedef result;
-};
-
-template<typename T>
-struct Mult<Zero,T>
-{
-  Zero typedef result;
-};
-
-template<typename N>
-struct Factorial
-{ };
-
-template<typename N>
-struct Factorial<Succ<N>>
-{
-  typename Mult<Succ<N>,typename Factorial<N>::result>::result typedef result;
-};
-
-template<>
-struct Factorial<Zero>
-{
-  Succ<Zero> typedef result;
-};
 
 // Helpers
 template<int N>
@@ -132,41 +55,17 @@ enum { X, Y, Z };
 int main() {
   assert(true);
 
-  assert(Zero::value == 0);
+  math_asserts();
 
-  assert(Succ<Zero>::value == 1);
+  assert((Add<GenNumber<3>::result, GenNumber<2>::result>::result::value == 5));
 
-  assert(Factorial<Zero>::result::value == 1);
-
-  assert(Factorial<Succ<Succ<Succ<Zero>>>>::result::value == 6);
-
-  assert((Mult<Succ<Succ<Succ<Zero>>>,Zero>::result::value == 0));
-
-  assert((Mult<Zero,Succ<Zero>>::result::value == 0));
-
-  assert((Mult<Succ<Zero>,Zero>::result::value == 0));
-
-  assert((Mult<Succ<Succ<Succ<Zero>>>,Succ<Zero>>::result::value == 3));
-
-  assert((Mult<Succ<Zero>,Succ<Succ<Succ<Zero>>>>::result::value == 3));
-
-  assert((Mult<Succ<Succ<Succ<Zero>>>,Succ<Succ<Succ<Zero>>>>::result::value == 9));
-
-  assert((Add<Zero,Succ<Zero>>::result::value == 1));
-
-  assert((Add<Zero,Succ<Succ<Zero>>>::result::value == 2));
-
-  assert((Add<Succ<Zero>,Succ<Succ<Zero>>>::result::value == 3));
+  assert((Mult<GenNumber<3>::result, GenNumber<2>::result>::result::value == 6));
 
   assert((Lookup<X, Binding<X, GenNumber<1>::result, EmptyEnv>>::result::value == 1));
 
   assert((Lookup<X, EmptyEnv>::result::value == INT_MIN));
 
   assert(GenNumber<3>::result::value == 3);
-
-  assert((Add<GenNumber<3>::result, GenNumber<2>::result>::result::value == 5));
-
-  assert((Mult<GenNumber<3>::result, GenNumber<2>::result>::result::value == 6));
 
   std::cout << "SUCCESS!" << std::endl;
 }
