@@ -1,5 +1,8 @@
 #include <climits>
 
+#ifndef LIST_H
+#define LIST_H
+
 // Values
 template<typename I, typename J>
 struct Cons { };
@@ -52,3 +55,4 @@ struct List<T, Ts...>
 };
 
 void list_asserts();
+#endif

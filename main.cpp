@@ -4,6 +4,7 @@
 #include "math.h"
 #include "list.h"
 #include "helpers.h"
+#include "functional.h"
 using namespace std;
 
 // Environment MetaValues
