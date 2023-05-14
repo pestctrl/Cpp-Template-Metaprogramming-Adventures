@@ -71,6 +71,13 @@ struct Ref { };
 template<int name>
 struct Atom { };
 
+template<int A>
+struct ENum
+{ };
+
+template<typename A, typename B>
+struct EAdd { };
+
 template<int Arg, typename Body>
 struct Lambda { };
 
@@ -103,6 +110,18 @@ template<typename Value, typename Env>
 struct Eval<Succ<Value>, Env>
 {
   Succ<Value> typedef result;
+};
+
+template<int Value, typename Env>
+struct Eval<ENum<Value>, Env>
+{
+  typename Num<Value>::result typedef result;
+};
+
+template<typename A, typename B, typename Env>
+struct Eval<EAdd<A,B>, Env>
+{
+  typename Add<typename Eval<typename A::result,Env>::result,typename Eval<typename B::result,Env>::result>::result typedef result;
 };
 
 template<int Name, typename Body, typename Env>
@@ -176,7 +195,13 @@ int main() {
 
   assert((Eval<Num<2>::result, EmptyEnv>::result::value == 2));
 
+  assert((Eval<ENum<2>, EmptyEnv>::result::value == 2));
+
+  assert((Eval<EAdd<Num<2>, Num<3>>, EmptyEnv>::result::value == 5));
+
   assert((Eval<Call<Lambda<X, Ref<X>>, Num<2>::result>, EmptyEnv>::result::value == 2));
+
+  // assert((Eval<Call<Lambda<X, Add<Num<1>, Ref<X>>>, Num<2>::result>, EmptyEnv>::result::value == 2));
 
   std::cout << "SUCCESS!" << std::endl;
 }
