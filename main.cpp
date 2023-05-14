@@ -78,6 +78,9 @@ struct ENum
 template<typename A, typename B>
 struct EAdd { };
 
+template<typename A, typename B>
+struct EMult { };
+
 template<int Arg, typename Body>
 struct Lambda { };
 
@@ -122,6 +125,12 @@ template<typename A, typename B, typename Env>
 struct Eval<EAdd<A,B>, Env>
 {
   typename Add<typename Eval<A,Env>::result,typename Eval<B,Env>::result>::result typedef result;
+};
+
+template<typename A, typename B, typename Env>
+struct Eval<EMult<A,B>, Env>
+{
+  typename Mult<typename Eval<A,Env>::result,typename Eval<B,Env>::result>::result typedef result;
 };
 
 template<int Name, typename Body, typename Env>
@@ -199,9 +208,15 @@ int main() {
 
   assert((Eval<EAdd<ENum<2>, ENum<3>>, EmptyEnv>::result::value == 5));
 
-  assert((Eval<Call<Lambda<X, Ref<X>>, Num<2>::result>, EmptyEnv>::result::value == 2));
+  assert((Eval<Call<Lambda<X, Ref<X>>, ENum<2>>, EmptyEnv>::result::value == 2));
 
-  // assert((Eval<Call<Lambda<X, Add<Num<1>, Ref<X>>>, Num<2>::result>, EmptyEnv>::result::value == 2));
+  assert((Eval<Call<Lambda<X, EAdd<ENum<1>, Ref<X>>>, Num<2>::result>, EmptyEnv>::result::value == 3));
+
+  assert((Eval<Call<Lambda<X, EAdd<ENum<5>, Ref<X>>>, Num<2>::result>, EmptyEnv>::result::value == 7));
+
+  assert((Eval<Call<Lambda<X, EMult<ENum<5>, Ref<X>>>, Num<2>::result>, EmptyEnv>::result::value == 10));
+
+  // Next step: rework lambda to have multiple arguments
 
   std::cout << "SUCCESS!" << std::endl;
 }
