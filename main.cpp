@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cassert>
+#include <climits>
 using namespace std;
 
 struct Zero
@@ -80,6 +81,41 @@ struct Factorial<Zero>
   Succ<Zero> typedef result;
 };
 
+// Environment MetaValues
+struct Error
+{
+  enum { value = INT_MIN };
+};
+
+struct EmptyEnv {};
+
+template<int Name, typename Value, typename Env>
+struct Binding {};
+
+// Environment MetaFunctions
+template<int Name, typename Env>
+struct Lookup {};
+
+template<int Name>
+struct Lookup<Name, EmptyEnv>
+{
+  Error typedef result;
+};
+
+template<int Name, typename Value, typename Env>
+struct Lookup<Name, Binding<Name, Value, Env>>
+{
+  Value typedef result;
+};
+
+template<int Name1, int Name2, typename Value, typename Env>
+struct Lookup<Name1, Binding<Name2, Value, Env>>
+{
+  typename Lookup<Name1, Env>::result typedef result;
+};
+
+enum { X, Y, Z };
+
 int main() {
   assert(true);
 
@@ -108,6 +144,10 @@ int main() {
   assert((Add<Zero,Succ<Succ<Zero>>>::result::value == 2));
 
   assert((Add<Succ<Zero>,Succ<Succ<Zero>>>::result::value == 3));
+
+  assert((Lookup<X, Binding<X,Succ<Zero>, EmptyEnv>>::result::value == 1));
+
+  assert((Lookup<X, EmptyEnv>::result::value == INT_MIN));
 
   std::cout << "SUCCESS!" << std::endl;
 }
