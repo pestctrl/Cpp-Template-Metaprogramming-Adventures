@@ -68,6 +68,15 @@ struct Let<LetSet<Name, Val>, Ts...>
 template<int name>
 struct Ref { };
 
+template<int Arg, typename Body>
+struct Lambda { };
+
+template<typename Lambda, typename Env>
+struct Closure { };
+
+template<typename Lambda, typename Arg>
+struct Call { };
+
 // Evaluator MetaFunctions
 template<typename Expr, typename Env>
 struct Eval { };
@@ -85,6 +94,19 @@ template<typename Value, typename Env>
 struct Eval<Succ<Value>, Env>
 {
   Succ<Value> typedef result;
+};
+
+template<int Name, typename Body, typename Env>
+struct Eval<Lambda<Name, Body>, Env>
+{
+  Closure<Lambda<Name, Env>, Env> typedef result;
+};
+
+template<int Name, typename Body, typename Arg, typename Env>
+struct Eval<Call<Lambda<Name, Body>, Arg>, Env>
+{
+  typename Apply<typename Eval<Lambda<Name, Body>, Env>::result,
+                 typename Eval<Arg, Env>::result>::result typedef result;
 };
 
 enum { X, Y, Z };
@@ -129,6 +151,8 @@ int main() {
   assert((Eval<Ref<Z>, env2>::result::value == 3));
 
   assert((Eval<Num<2>::result, EmptyEnv>::result::value == 2));
+
+  assert((Eval<Call<Lambda<X, Ref<X>>, Num<2>::result>, EmptyEnv>::value == 2));
 
   std::cout << "SUCCESS!" << std::endl;
 }
