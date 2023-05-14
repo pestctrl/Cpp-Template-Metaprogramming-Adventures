@@ -40,6 +40,15 @@ struct Lookup<Name1, Binding<Name2, Value, Env>>
   typename Lookup<Name1, Env>::result typedef result;
 };
 
+template<typename...>
+struct Let { };
+
+template<int Name, typename Val>
+struct Let<Cons<Name, Val>>
+{
+  Binding<Name,Val,EmptyEnv> typedef value;
+};
+
 enum { X, Y, Z };
 
 int main() {
