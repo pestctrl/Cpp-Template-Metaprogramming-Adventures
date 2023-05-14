@@ -25,6 +25,22 @@ struct Factorial<0>
   enum { value = 1 };
 };
 
+template<typename I,typename J>
+struct Add
+{ };
+
+template<typename I>
+struct Add<I,Zero>
+{
+  enum { value = I::value };
+};
+
+template<typename I, typename J>
+struct Add<I,Succ<J>>
+{
+  enum { value = Add<Succ<I>,J>::value };
+};
+
 template<typename I, typename J>
 struct Mult
 { };
@@ -32,7 +48,7 @@ struct Mult
 template<typename I, typename K>
 struct Mult<I, Succ<K>>
 {
-  enum { value = I::value + Mult<I,K>::value };
+  enum { value = Add<I,Mult<I,K>>::value };
 };
 
 template<>
@@ -81,6 +97,12 @@ int main() {
   assert((Mult<Succ<Zero>,Succ<Succ<Succ<Zero>>>>::value == 3));
 
   assert((Mult<Succ<Succ<Succ<Zero>>>,Succ<Succ<Succ<Zero>>>>::value == 9));
+
+  assert((Add<Zero,Succ<Zero>>::value == 1));
+
+  assert((Add<Zero,Succ<Succ<Zero>>>::value == 2));
+
+  assert((Add<Succ<Zero>,Succ<Succ<Zero>>>::value == 3));
 
   std::cout << "SUCCESS!" << std::endl;
 }
