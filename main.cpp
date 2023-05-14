@@ -46,16 +46,16 @@ struct Lookup<Name1, Binding<Name2, Value, Env>>
 template<typename...>
 struct Let { };
 
+template<typename Env>
+struct Let<Env>
+{
+  Env typedef result;
+};
+
 template<int Name, typename Val>
 struct Let<LetSet<Name, Val>>
 {
   Binding<Name,Val,EmptyEnv> typedef result;
-};
-
-template<int Name, typename Val, typename Env>
-struct Let<Binding<Name, Val, Env>>
-{
-  Binding<Name,Val,Env> typedef result;
 };
 
 template<int Name, typename Val, typename... Ts>
@@ -99,7 +99,13 @@ struct Eval<Succ<Value>, Env>
 template<int Name, typename Body, typename Env>
 struct Eval<Lambda<Name, Body>, Env>
 {
-  Closure<Lambda<Name, Env>, Env> typedef result;
+  Closure<Lambda<Name, Body>, Env> typedef result;
+};
+
+template<int Name, typename Body, typename Env, typename Arg>
+struct Apply<Closure<Lambda<Name,Body>, Env>, Arg>
+{
+  typename Eval<Body, typename Let<LetSet<Name, Arg>, Env>::result>::result typedef result;
 };
 
 template<int Name, typename Body, typename Arg, typename Env>
@@ -152,7 +158,7 @@ int main() {
 
   assert((Eval<Num<2>::result, EmptyEnv>::result::value == 2));
 
-  assert((Eval<Call<Lambda<X, Ref<X>>, Num<2>::result>, EmptyEnv>::value == 2));
+  assert((Eval<Call<Lambda<X, Ref<X>>, Num<2>::result>, EmptyEnv>::result::value == 2));
 
   std::cout << "SUCCESS!" << std::endl;
 }
