@@ -68,6 +68,9 @@ struct Let<LetSet<Name, Val>, Ts...>
 template<int name>
 struct Ref { };
 
+template<int name>
+struct Atom { };
+
 template<int Arg, typename Body>
 struct Lambda { };
 
@@ -88,6 +91,12 @@ template<int Name, typename Env>
 struct Eval<Ref<Name>, Env>
 {
   typename Lookup<Name, Env>::result typedef result;
+};
+
+template<int Name, typename Env>
+struct Eval<Atom<Name>, Env>
+{
+  typename Num<Name>::result typedef result;
 };
 
 template<typename Value, typename Env>
@@ -155,6 +164,10 @@ int main() {
   assert((Eval<Ref<X>, env2>::result::value == 11));
   assert((Eval<Ref<Y>, env2>::result::value == 12));
   assert((Eval<Ref<Z>, env2>::result::value == 3));
+
+  assert((Eval<Atom<X>, env2>::result::value == 0));
+  assert((Eval<Atom<Y>, env2>::result::value == 1));
+  assert((Eval<Atom<Z>, env2>::result::value == 2));
 
   assert((Eval<Num<2>::result, EmptyEnv>::result::value == 2));
 
