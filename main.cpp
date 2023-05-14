@@ -2,20 +2,9 @@
 #include <cassert>
 #include <climits>
 #include "math.h"
+#include "list.h"
+#include "helpers.h"
 using namespace std;
-
-// Helpers
-template<int N>
-struct GenNumber
-{
-  Succ<typename GenNumber<N-1>::result> typedef result;
-};
-
-template<>
-struct GenNumber<0>
-{
-  Zero typedef result;
-};
 
 // Environment MetaValues
 struct Error
@@ -56,6 +45,8 @@ int main() {
   assert(true);
 
   math_asserts();
+
+  list_asserts();
 
   assert((Add<GenNumber<3>::result, GenNumber<2>::result>::result::value == 5));
 

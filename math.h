@@ -1,3 +1,6 @@
+#ifndef MATH_H
+#define MATH_H
+
 struct Zero
 {
   enum { value = 0 };
@@ -77,3 +80,5 @@ struct Factorial<Zero>
 };
 
 void math_asserts();
+
+#endif
