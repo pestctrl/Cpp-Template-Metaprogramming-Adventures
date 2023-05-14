@@ -25,46 +25,38 @@ struct Factorial<0>
   enum { value = 1 };
 };
 
-template<int I, int J>
+template<typename I, typename J>
 struct Mult
+{ };
+
+template<typename I, typename K>
+struct Mult<I, Succ<K>>
 {
-  enum { value = I + Mult<I,J-1>::value };
+  enum { value = I::value + Mult<I,K>::value };
 };
 
-template<int I>
-struct Mult<I,0>
-{
-  enum { value = 0 };
-};
-
-template<int I>
-struct Mult<0,I>
+template<>
+struct Mult<Succ<Zero>,Zero>
 {
   enum { value = 0 };
 };
 
 template<>
-struct Mult<1,0>
+struct Mult<Zero,Succ<Zero>>
 {
   enum { value = 0 };
 };
 
-template<>
-struct Mult<0,1>
+template<typename T>
+struct Mult<T,Zero>
 {
   enum { value = 0 };
 };
 
-template<int I>
-struct Mult<I,1>
+template<typename T>
+struct Mult<Zero,T>
 {
-  enum { value = I };
-};
-
-template<int I>
-struct Mult<1,I>
-{
-  enum { value = I };
+  enum { value = 0 };
 };
 
 int main() {
@@ -78,17 +70,17 @@ int main() {
 
   assert(Factorial<3>::value == 6);
 
-  assert((Mult<3,0>::value == 0));
+  assert((Mult<Succ<Succ<Succ<Zero>>>,Zero>::value == 0));
 
-  assert((Mult<0,1>::value == 0));
+  assert((Mult<Zero,Succ<Zero>>::value == 0));
 
-  assert((Mult<1,0>::value == 0));
+  assert((Mult<Succ<Zero>,Zero>::value == 0));
 
-  assert((Mult<3,1>::value == 3));
+  assert((Mult<Succ<Succ<Succ<Zero>>>,Succ<Zero>>::value == 3));
 
-  assert((Mult<1,3>::value == 3));
+  assert((Mult<Succ<Zero>,Succ<Succ<Succ<Zero>>>>::value == 3));
 
-  assert((Mult<3,3>::value == 9));
+  assert((Mult<Succ<Succ<Succ<Zero>>>,Succ<Succ<Succ<Zero>>>>::value == 9));
 
   std::cout << "SUCCESS!" << std::endl;
 }
