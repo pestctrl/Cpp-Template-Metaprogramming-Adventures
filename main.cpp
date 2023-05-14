@@ -290,6 +290,8 @@ int main() {
 
   assert((Eval<Call<Lambda<X, EMult<ENum<5>, Ref<X>>>, Num<2>::result>, EmptyEnv>::result::value == 10));
 
+  assert((Eval<Call<Lambda<X, EMult<ENum<5>, Ref<X>>>, EMult<ENum<4>, ENum<3>>>, EmptyEnv>::result::value == 60));
+
   // Next step: rework lambda to have multiple arguments
   LetList<NameList<X,Y,Z>::result,
           ValList<Num<1>::result,
