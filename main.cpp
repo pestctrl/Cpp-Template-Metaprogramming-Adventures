@@ -118,5 +118,7 @@ int main() {
 
   assert((Eval<Call<sos, ValList<ENum<3>,ENum<4>>>, EmptyEnv>::result::value == 25));
 
+  // Next step: clean-up Call, NameList, ValList, all use one List type
+
   std::cout << "SUCCESS!" << std::endl;
 }
