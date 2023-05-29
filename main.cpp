@@ -35,17 +35,21 @@ int main() {
 
   assert(Num<3>::result::value == 3);
 
-  Let<LetSet<X,Num<1>::result>,
-      LetSet<Y,Num<2>::result>,
-      LetSet<Z,Num<3>::result>>::result typedef env1;
+  typedef
+    Let<LetSet<X,Num<1>::result>,
+        LetSet<Y,Num<2>::result>,
+        LetSet<Z,Num<3>::result>>::result
+    env1;
 
   assert((Lookup<X, env1>::result::value == 1));
   assert((Lookup<Y, env1>::result::value == 2));
   assert((Lookup<Z, env1>::result::value == 3));
 
-  Let<LetSet<X,Num<11>::result>,
-      LetSet<Y,Num<12>::result>,
-      env1>::result typedef env2;
+  typedef
+    Let<LetSet<X,Num<11>::result>,
+        LetSet<Y,Num<12>::result>,
+        env1>::result
+    env2;
 
   assert((Lookup<X, env2>::result::value == 11));
   assert((Lookup<Y, env2>::result::value == 12));
@@ -76,35 +80,41 @@ int main() {
   assert((Eval<Call<Lambda<X, EMult<ENum<5>, Ref<X>>>, EMult<ENum<4>, ENum<3>>>, EmptyEnv>::result::value == 60));
 
   // Next step: rework lambda to have multiple arguments
-  LetList<NameList<X,Y,Z>::result,
-          ValList<Num<1>::result,
-                  Num<2>::result,
-                  Num<3>::result>::result,
-          EmptyEnv>::result typedef env3;
+  typedef
+    LetList<NameList<X,Y,Z>::result,
+            ValList<Num<1>::result,
+                    Num<2>::result,
+                    Num<3>::result>::result,
+            EmptyEnv>::result
+    env3;
 
   assert((Eval<Ref<X>, env3>::result::value == 1));
   assert((Eval<Ref<Y>, env3>::result::value == 2));
   assert((Eval<Ref<Z>, env3>::result::value == 3));
 
-  LetList<NameList<X,Y>::result,
-          EvList<ValList<EAdd<ENum<1>, ENum<2>>,
-                         EMult<ENum<2>, ENum<3>>>::result,
-                 EmptyEnv>::result,
-          EmptyEnv>::result typedef env4;
+  typedef
+    LetList<NameList<X,Y>::result,
+            EvList<ValList<EAdd<ENum<1>, ENum<2>>,
+                           EMult<ENum<2>, ENum<3>>>::result,
+                   EmptyEnv>::result,
+            EmptyEnv>::result
+    env4;
 
   assert((Eval<Ref<X>, env4>::result::value == 3));
   assert((Eval<Ref<Y>, env4>::result::value == 6));
 
   assert((Eval<Call<LLambda<NameList<X>, EMult<ENum<5>, Ref<X>>>, ValList<ENum<2>>>, EmptyEnv>::result::value == 10));
 
-  LLambda<NameList<X>, EMult<Ref<X>, Ref<X>>>
-    typedef square;
+  typedef
+    LLambda<NameList<X>, EMult<Ref<X>, Ref<X>>>
+    square;
 
   assert((Eval<Call<square, ValList<ENum<2>>>, EmptyEnv>::result::value == 4));
 
-  LLambda<NameList<X, Y>, EAdd<Call<square, ValList<Ref<X>>>,
-                               Call<square, ValList<Ref<Y>>>>>
-    typedef sos;
+  typedef
+    LLambda<NameList<X, Y>, EAdd<Call<square, ValList<Ref<X>>>,
+                                 Call<square, ValList<Ref<Y>>>>>
+    sos;
 
   assert((Eval<Call<sos, ValList<ENum<3>,ENum<4>>>, EmptyEnv>::result::value == 25));
 

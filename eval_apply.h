@@ -41,86 +41,86 @@ struct Apply { };
 template<int Name, typename Env>
 struct Eval<Ref<Name>, Env>
 {
-  typename Lookup<Name, Env>::result typedef result;
+  typedef typename Lookup<Name, Env>::result result;
 };
 
 template<int Name, typename Env>
 struct Eval<Atom<Name>, Env>
 {
-  typename Num<Name>::result typedef result;
+  typedef typename Num<Name>::result result;
 };
 
 template<typename Value, typename Env>
 struct Eval<Succ<Value>, Env>
 {
-  Succ<Value> typedef result;
+  typedef Succ<Value> result;
 };
 
 template<int Value, typename Env>
 struct Eval<ENum<Value>, Env>
 {
-  typename Num<Value>::result typedef result;
+  typedef typename Num<Value>::result result;
 };
 
 template<typename A, typename B, typename Env>
 struct Eval<EAdd<A,B>, Env>
 {
-  typename Add<typename Eval<A,Env>::result,typename Eval<B,Env>::result>::result typedef result;
+  typedef typename Add<typename Eval<A,Env>::result,typename Eval<B,Env>::result>::result result;
 };
 
 template<typename A, typename B, typename Env>
 struct Eval<EMult<A,B>, Env>
 {
-  typename Mult<typename Eval<A,Env>::result,typename Eval<B,Env>::result>::result typedef result;
+  typedef typename Mult<typename Eval<A,Env>::result,typename Eval<B,Env>::result>::result result;
 };
 
 template<int Name, typename Body, typename Env>
 struct Eval<Lambda<Name, Body>, Env>
 {
-  Closure<Lambda<Name, Body>, Env> typedef result;
+  typedef Closure<Lambda<Name, Body>, Env> result;
 };
 
 template<typename NameList, typename Body, typename Env>
 struct Eval<LLambda<NameList, Body>, Env>
 {
-  Closure<LLambda<NameList, Body>, Env> typedef result;
+  typedef Closure<LLambda<NameList, Body>, Env> result;
 };
 
 template<int Name, typename Body, typename Env, typename Arg>
 struct Apply<Closure<Lambda<Name,Body>, Env>, Arg>
 {
-  typename Eval<Body, typename Let<LetSet<Name, Arg>, Env>::result>::result typedef result;
+  typedef typename Eval<Body, typename Let<LetSet<Name, Arg>, Env>::result>::result result;
 };
 
 template<typename NameList, typename Body, typename Env, typename ValList>
 struct Apply<Closure<LLambda<NameList,Body>, Env>, ValList>
 {
-  typename Eval<Body, typename LetList<typename NameList::result, ValList, Env>::result>::result typedef result;
+  typedef typename Eval<Body, typename LetList<typename NameList::result, ValList, Env>::result>::result result;
 };
 
 template<int Name, typename Body, typename Arg, typename Env>
 struct Eval<Call<Lambda<Name, Body>, Arg>, Env>
 {
-  typename Apply<typename Eval<Lambda<Name, Body>, Env>::result,
-                 typename Eval<Arg, Env>::result>::result typedef result;
+  typedef typename Apply<typename Eval<Lambda<Name, Body>, Env>::result,
+                         typename Eval<Arg, Env>::result>::result result;
 };
 
 template<typename Val, typename Env>
 struct EvList<ValCons<Val,Nil>, Env>
 {
-  ValCons<typename Eval<Val, Env>::result, Nil> typedef result;
+  typedef ValCons<typename Eval<Val, Env>::result, Nil> result;
 };
 
 template<typename Val, typename Vals, typename Env>
 struct EvList<ValCons<Val,Vals>, Env>
 {
-  ValCons<typename Eval<Val, Env>::result,
-          typename EvList<Vals,Env>::result> typedef result;
+  typedef ValCons<typename Eval<Val, Env>::result,
+                  typename EvList<Vals,Env>::result> result;
 };
 
 template<typename NameList, typename Body, typename ValList, typename Env>
 struct Eval<Call<LLambda<NameList, Body>, ValList>, Env>
 {
-  typename Apply<typename Eval<LLambda<NameList, Body>, Env>::result,
-                 typename EvList<typename ValList::result, Env>::result>::result typedef result;
+  typedef typename Apply<typename Eval<LLambda<NameList, Body>, Env>::result,
+                         typename EvList<typename ValList::result, Env>::result>::result result;
 };

@@ -3,11 +3,11 @@
 template<int N>
 struct Num
 {
-  Succ<typename Num<N-1>::result> typedef result;
+  typedef Succ<typename Num<N-1>::result> result;
 };
 
 template<>
 struct Num<0>
 {
-  Zero typedef result;
+  typedef Zero result;
 };

@@ -21,7 +21,7 @@ struct Car { };
 template<typename I, typename J>
 struct Car<Cons<I,J>>
 {
-  I typedef result;
+  typedef I result;
 };
 
 template <typename I>
@@ -30,7 +30,7 @@ struct Cdr { };
 template <typename I, typename J>
 struct Cdr<Cons<I,J>>
 {
-  J typedef result;
+  typedef J result;
 };
 
 template<typename... Ts>
@@ -39,19 +39,19 @@ struct List { };
 template <>
 struct List<>
 {
-  Nil typedef result;
+  typedef Nil result;
 };
 
 template <typename T>
 struct List<T>
 {
-  Cons<T, Nil> typedef result;
+  typedef Cons<T, Nil> result;
 };
 
 template <typename T, typename... Ts>
 struct List<T, Ts...>
 {
-  Cons<T,typename List<Ts...>::result> typedef result;
+  typedef Cons<T,typename List<Ts...>::result> result;
 };
 
 void list_asserts();

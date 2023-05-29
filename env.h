@@ -22,19 +22,19 @@ struct Lookup {};
 template<int Name>
 struct Lookup<Name, EmptyEnv>
 {
-  Error typedef result;
+  typedef Error result;
 };
 
 template<int Name, typename Value, typename Env>
 struct Lookup<Name, Binding<Name, Value, Env>>
 {
-  Value typedef result;
+  typedef Value result;
 };
 
 template<int Name1, int Name2, typename Value, typename Env>
 struct Lookup<Name1, Binding<Name2, Value, Env>>
 {
-  typename Lookup<Name1, Env>::result typedef result;
+  typedef typename Lookup<Name1, Env>::result result;
 };
 
 template<typename...>
@@ -43,19 +43,19 @@ struct Let { };
 template<typename Env>
 struct Let<Env>
 {
-  Env typedef result;
+  typedef Env result;
 };
 
 template<int Name, typename Val>
 struct Let<LetSet<Name, Val>>
 {
-  Binding<Name,Val,EmptyEnv> typedef result;
+  typedef Binding<Name,Val,EmptyEnv> result;
 };
 
 template<int Name, typename Val, typename... Ts>
 struct Let<LetSet<Name, Val>, Ts...>
 {
-  Binding<Name,Val,typename Let<Ts...>::result> typedef result;
+  typedef Binding<Name,Val,typename Let<Ts...>::result> result;
 };
 
 #endif
